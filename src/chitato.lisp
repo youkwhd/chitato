@@ -3,8 +3,8 @@
   (:export :main))
 
 (in-package :chitato)
-(require :cl-charms)
 
+(require :cl-charms)
 (load "src/board.lisp")
 
 (defun main ()

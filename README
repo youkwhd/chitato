@@ -6,5 +6,20 @@ Customizable game of "Tic-tac-toe"
 Dependencies
 ------------
 
-- common lisp compiler (sbcl)
+- Common Lisp compiler (sbcl)
 - ncurses (cl-charms)
+
+Compiling and Running
+---------------------
+
+Building chitato:
+
+    $ ./build.sh
+    $ ./build/chitato
+
+Run chitato without compiling:
+    
+    $ ./run.sh
+
+Or, you can set up a live REPL session and call
+`(chitato:main)` from "src/chitato.lisp".

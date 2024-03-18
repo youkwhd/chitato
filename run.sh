@@ -1,3 +1,5 @@
-#!/bin/env sh
+#!/usr/bin/bash
 
-sbcl --script chitato.lisp
+sbcl --non-interactive \
+     --load src/chitato.lisp \
+     --eval "((lambda () (format t \"~%[$0 ::]~%\") (chitato:main)))"

@@ -2,3 +2,8 @@ chitato
 =======
 
 Customizable game of "Tic-tac-toe"
+
+Dependencies
+------------
+
+- ncurses (cl-charms)

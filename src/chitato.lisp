@@ -5,5 +5,7 @@
 (in-package :chitato)
 (require :cl-charms)
 
+(load "src/board.lisp")
+
 (defun main ()
-  (format t "Hello, Common Lisp!~%"))
+  (hello "Common Lisp"))

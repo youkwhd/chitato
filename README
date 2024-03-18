@@ -6,4 +6,5 @@ Customizable game of "Tic-tac-toe"
 Dependencies
 ------------
 
+- common lisp compiler (sbcl)
 - ncurses (cl-charms)

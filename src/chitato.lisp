@@ -13,10 +13,9 @@
     (charms:enable-raw-input :interpret-control-characters t)
     (charms:enable-non-blocking-mode stdwin)
 
-    (loop
-      (charms:clear-window stdwin)
-      (charms:refresh-window stdwin)
+    (draw-board stdwin +board+)
 
+    (loop
       (let ((ch (charms:get-char stdwin
                        :ignore-error t)))
         (case ch

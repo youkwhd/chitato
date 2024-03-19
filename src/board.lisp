@@ -28,12 +28,8 @@
   (charms:clear-window curses-window)
   (charms:refresh-window curses-window)
 
-  (let ((board-width (+ (* (length board) 4) 1))
-        (board-height (+ (* (length (elt board 0)) 2) 1)))
-    (draw-board-line curses-window board board-width board-height)
-    (draw-board-middle curses-window board board-width board-height))
-
   (dolist (row board)
-    (dolist (cell row)
-      (charms:write-char-at-cursor curses-window #\0))
-    (charms:write-char-at-cursor curses-window #\newline)))
+      (draw-board-line curses-window board 0 0)
+      (draw-board-middle curses-window row 0 0))
+
+  (draw-board-line curses-window board 0 0))

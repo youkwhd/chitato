@@ -20,7 +20,10 @@
 (defun draw-board-middle (curses-window board-row w h)
   (loop for x in board-row do
     (charms:write-string-at-cursor curses-window "| ")
-    (charms:write-string-at-cursor curses-window "  "))
+    (case x
+      ((0)
+       (charms:write-char-at-cursor curses-window #\space)))
+    (charms:write-char-at-cursor curses-window #\space))
   (charms:write-string-at-cursor curses-window "|")
   (charms:write-char-at-cursor curses-window #\newline))
 

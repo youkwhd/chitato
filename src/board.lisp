@@ -4,8 +4,8 @@
 
 (defconstant +board+
   '((:e :e :e)
-    (:e :e :e)
-    (:e :e :e))
+    (:x :o :e)
+    (:x :e :e))
   "board :e for empty, :x, :o are players")
 
 (defun hello (to)

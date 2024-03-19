@@ -19,9 +19,9 @@
   (charms:write-char-at-cursor curses-window #\newline))
 
 (defun draw-board-middle (curses-window board-row)
-  (loop for x in board-row do
+  (loop for cell in board-row do
     (charms:write-string-at-cursor curses-window "| ")
-    (case x
+    (case cell 
       ((:e)
        (charms:write-char-at-cursor curses-window #\space))
       ((:x)

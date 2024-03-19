@@ -1,6 +1,6 @@
 (in-package :chitato)
 
-(defconstant board
+(defconstant +board+
   '('(0 0 0)
     '(0 0 0)
     '(0 0 0)))

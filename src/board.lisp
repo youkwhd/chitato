@@ -40,20 +40,22 @@
   (assert (>= n 1))
 
   (defun fn (board x y n prev-player)
-    (when (> n 0)
+    (when (eq n 0)
       (return-from fn t))
-    (and
-      (eq (nth x (nth y board)) prev-player)
-      (fn board (+ x 1) y (1- n) (nth x (nth y board)))))
+    (let ((cell (nth x (nth y board))))
+      (and
+        (eq cell prev-player)
+        (fn board (+ x 1) y (1- n) cell))))
 
   (let ((cell (nth x (nth y board))))
-    (when (eq cell :e)
+    (when (or (eq cell :e)
+              (> (+ x n) (length (first board))))
       (return-from check-if-player-wins-horizontal nil))
     (fn board x y n cell)))
 
 (defun check-if-player-wins (board)
-  (loop for y from 0 to (length board) do
-    (loop for x from 0 to (length (nth y board)) do
+  (loop for y from 0 to (1- (length board)) do
+    (loop for x from 0 to (1- (length (nth y board))) do
       (when (check-if-player-wins-horizontal board x y 3)
         (return-from check-if-player-wins t))))
   nil)

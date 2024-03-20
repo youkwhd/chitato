@@ -8,6 +8,8 @@
 (load "src/player.lisp")
 (load "src/board.lisp")
 
+(defconstant +win-check-range+ 3)
+
 (defparameter *current-player* :o)
 (defparameter *x* 0)
 (defparameter *y* 0)

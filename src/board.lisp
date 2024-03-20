@@ -3,9 +3,9 @@
 (require :cl-charms)
 
 (defparameter *board*
-  '((:o :x :e)
-    (:x :o :o)
-    (:x :e :x))
+  '((:e :e :e)
+    (:e :e :e)
+    (:e :e :e))
   "board :e for empty, :x, :o are players")
 
 (defun draw-board-line (curses-window board)
@@ -70,7 +70,7 @@
       (return-from check-if-player-wins-vertical nil))
     (fn board x y n cell)))
 
-(defun check-if-player-wins-diagonal (board x y n)
+(defun check-if-player-wins-right-diagonal (board x y n)
   (assert (>= n 1))
 
   (defun fn (board x y n prev-player)
@@ -83,10 +83,29 @@
 
   (let ((cell (nth x (nth y board))))
     (when (or (eq cell :e)
-              (and
+              (or
                 (> (+ x n) (length (first board)))
                 (> (+ y n) (length board))))
-      (return-from check-if-player-wins-diagonal nil))
+      (return-from check-if-player-wins-right-diagonal nil))
+    (fn board x y n cell)))
+
+(defun check-if-player-wins-left-diagonal (board x y n)
+  (assert (>= n 1))
+
+  (defun fn (board x y n prev-player)
+    (when (eq n 0)
+      (return-from fn t))
+    (let ((cell (nth x (nth y board))))
+      (and
+        (eq cell prev-player)
+        (fn board (- x 1) (+ y 1) (1- n) cell))))
+
+  (let ((cell (nth x (nth y board))))
+    (when (or (eq cell :e)
+              (or
+                (< (- (+ x 1) n) 0)
+                (> (+ y n) (length board))))
+      (return-from check-if-player-wins-left-diagonal nil))
     (fn board x y n cell)))
 
 (defun check-if-player-wins (board range)
@@ -95,6 +114,7 @@
       (when (or
               (check-if-player-wins-horizontal board x y range)
               (check-if-player-wins-vertical board x y range)
-              (check-if-player-wins-diagonal board x y range))
+              (check-if-player-wins-right-diagonal board x y range)
+              (check-if-player-wins-left-diagonal board x y range))
         (return-from check-if-player-wins t))))
   nil)

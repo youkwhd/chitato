@@ -3,7 +3,7 @@
 (require :cl-charms)
 
 (defparameter *board*
-  '((:e :o :o)
+  '((:e :o :e)
     (:x :o :e)
     (:x :e :e))
   "board :e for empty, :x, :o are players")
@@ -47,10 +47,10 @@
       (eq (nth x (nth y board)) prev-player)
       (fn board (+ x 1) y (1- n) (nth x (nth y board)))))
 
-  (when (eq (nth x (nth y board)) :e)
-    (return-from check-if-player-wins-horizontal nil))
-
-  (fn board x y n (nth x (nth y board))))
+  (let ((cell (nth x (nth y board))))
+    (when (eq cell :e)
+      (return-from check-if-player-wins-horizontal nil))
+    (fn board x y n cell)))
 
 (defun check-if-player-wins (board)
   (loop for y from 0 to (length board) do

@@ -36,7 +36,6 @@
 
   (draw-board-line curses-window board))
 
-;; TODO: check for out-of-bound
 (defun check-if-player-wins-horizontal (board x y n)
   (assert (>= n 1))
 

@@ -12,6 +12,9 @@
 (defparameter *x* 0)
 (defparameter *y* 0)
 
+(defparameter *last-cursor-x* 0)
+(defparameter *last-cursor-y* 0)
+
 (defun main ()
   (let ((stdwin (charms:initialize)))
     (charms:disable-echoing)
@@ -27,6 +30,11 @@
     ;; printed from (draw-board), so no need.
     (charms:move-cursor-up stdwin :amount (* (length *board*) 2))
     (charms:move-cursor-right stdwin :amount 2)
+
+    (multiple-value-bind (x y)
+      (charms:cursor-position stdwin)
+      (setf *last-cursor-x* x)
+      (setf *last-cursor-y* y))
 
     ;; TODO: wrap in a function
     (loop
@@ -55,6 +63,11 @@
              (setf (nth *x* (nth *y* *board*)) *current-player*)
              (setf *current-player* (change-player-turn *current-player*))
 
+             (multiple-value-bind (x y)
+               (charms:cursor-position stdwin)
+               (setf *last-cursor-x* x)
+               (setf *last-cursor-y* y))
+
              ;; TODO: wrap in a function
              (charms:clear-window stdwin)
              (charms:move-cursor stdwin 0 0)
@@ -63,8 +76,8 @@
 
              (charms:move-cursor-up stdwin :amount (* (length *board*) 2))
              (charms:move-cursor-right stdwin :amount 2)
-             (setf *x* 0)
-             (setf *y* 0)))
+
+             (charms:move-cursor stdwin *last-cursor-x* *last-cursor-y*)))
           ((#\q)
            (charms:finalize)
            (sb-ext:exit)))))))

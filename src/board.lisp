@@ -33,9 +33,6 @@
   (charms:write-char-at-cursor curses-window #\newline))
 
 (defun draw-board (curses-window board)
-  (charms:clear-window curses-window)
-  (charms:refresh-window curses-window)
-
   (dolist (row board)
       (draw-board-line curses-window board)
       (draw-board-middle curses-window row))

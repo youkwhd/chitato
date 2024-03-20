@@ -3,7 +3,7 @@
 (require :cl-charms)
 
 (defparameter *board*
-  '((:e :e :e)
+  '((:e :o :o)
     (:x :o :e)
     (:x :e :e))
   "board :e for empty, :x, :o are players")
@@ -39,19 +39,22 @@
 ;; TODO: check for out-of-bound
 (defun check-if-player-wins-horizontal (board x y n)
   (assert (>= n 1))
+
   (defun fn (board x y n prev-player)
-    (if (> n 0)
-      (and
-        (eq (nth x (nth y board)) prev-player)
-        (fn board (+ x 1) y (1- n) (nth x (nth y board))))
-      t))
-  (if (not (eq (nth x (nth y board)) :e))
-    (fn board x y n (nth x (nth y board)))
-    nil))
+    (when (> n 0)
+      (return-from fn t))
+    (and
+      (eq (nth x (nth y board)) prev-player)
+      (fn board (+ x 1) y (1- n) (nth x (nth y board)))))
+
+  (when (eq (nth x (nth y board)) :e)
+    (return-from check-if-player-wins-horizontal nil))
+
+  (fn board x y n (nth x (nth y board))))
 
 (defun check-if-player-wins (board)
   (loop for y from 0 to (length board) do
-    (loop for x from 0 to (nth y board) do
+    (loop for x from 0 to (length (nth y board)) do
       (when (check-if-player-wins-horizontal board x y 3)
-        t)))
+        (return-from check-if-player-wins t))))
   nil)

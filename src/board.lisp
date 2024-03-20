@@ -50,7 +50,7 @@
     (if (> n 0)
       (and
         (eq (nth x (nth y board)) prev-player)
-        (fn board (+ x 1) y (1- n) prev-player))
+        (fn board (+ x 1) y (1- n) (nth x (nth y board))))
       t))
   (if (not (eq (nth x (nth y board)) :e))
     (fn board x y n (nth x (nth y board)))

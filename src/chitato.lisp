@@ -7,6 +7,7 @@
 (require :cl-charms)
 (load "src/board.lisp")
 
+(defparameter *current-player* :o)
 (defparameter *x* 0)
 (defparameter *y* 0)
 
@@ -17,13 +18,13 @@
     (charms:enable-non-blocking-mode stdwin)
 
     (charms:clear-window stdwin)
+    (charms:move-cursor stdwin 0 0)
+    (draw-board stdwin *board*)
     (charms:refresh-window stdwin)
-
-    (draw-board stdwin +board+)
 
     ;; should decrement move up but there's already newline
     ;; printed from (draw-board), so no need.
-    (charms:move-cursor-up stdwin :amount (* (length +board+) 2))
+    (charms:move-cursor-up stdwin :amount (* (length *board*) 2))
     (charms:move-cursor-right stdwin :amount 2)
 
     (loop
@@ -34,19 +35,30 @@
           ((#\w)
            (when (> *y* 0)
              (charms:move-cursor-up stdwin :amount 2)
-             (setq *y* (1- *y*))))
+             (setf *y* (1- *y*))))
           ((#\a)
            (when (> *x* 0)
              (charms:move-cursor-left stdwin :amount 4)
-             (setq *x* (1- *x*))))
+             (setf *x* (1- *x*))))
           ((#\s)
-           (when (< *y* (1- (length +board+)))
+           (when (< *y* (1- (length *board*)))
              (charms:move-cursor-down stdwin :amount 2)
-             (setq *y* (1+ *y*))))
+             (setf *y* (1+ *y*))))
           ((#\d)
-           (when (< *x* (1- (length (first +board+))))
+           (when (< *x* (1- (length (first *board*))))
              (charms:move-cursor-right stdwin :amount 4)
-             (setq *x* (1+ *x*))))
+             (setf *x* (1+ *x*))))
+          ((#\space)
+           (setf (nth *x* (nth *y* *board*)) *current-player*)
+           (charms:clear-window stdwin)
+           (charms:move-cursor stdwin 0 0)
+           (draw-board stdwin *board*)
+           (charms:refresh-window stdwin)
+
+           (charms:move-cursor-up stdwin :amount (* (length *board*) 2))
+           (charms:move-cursor-right stdwin :amount 2)
+           (setf *x* 0)
+           (setf *y* 0))
           ((#\q)
            (charms:finalize)
            (sb-ext:exit)))))))

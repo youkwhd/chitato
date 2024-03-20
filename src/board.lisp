@@ -2,7 +2,7 @@
 
 (require :cl-charms)
 
-(defconstant +board+
+(defparameter *board*
   '((:e :e :e)
     (:x :o :e)
     (:x :e :e))

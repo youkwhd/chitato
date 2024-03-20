@@ -118,3 +118,8 @@
               (check-if-player-wins-left-diagonal board x y range))
         (return-from check-if-player-wins t))))
   nil)
+
+(defun check-if-draw (board)
+  (every (lambda (res) (eq res t))
+         (map 'list (lambda (board-row)
+                      (notany (lambda (cell) (eq cell :e)) board-row)) board)))

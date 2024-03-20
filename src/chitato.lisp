@@ -77,7 +77,13 @@
              (charms:move-cursor-up stdwin :amount (* (length *board*) 2))
              (charms:move-cursor-right stdwin :amount 2)
 
-             (charms:move-cursor stdwin *last-cursor-x* *last-cursor-y*)))
+             (charms:move-cursor stdwin *last-cursor-x* *last-cursor-y*)
+
+             (when (or
+                     (check-if-player-wins *board* +win-check-range+)
+                     (check-if-draw *board*))
+               (charms:finalize)
+               (sb-ext:exit))))
           ((#\q)
            (charms:finalize)
            (sb-ext:exit)))))))

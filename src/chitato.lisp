@@ -17,9 +17,9 @@
 (defparameter *last-cursor-x* 0)
 (defparameter *last-cursor-y* 0)
 
-(defun save-cursor-pos ()
+(defun save-cursor-pos (curses-window)
   (multiple-value-bind (x y)
-    (charms:cursor-position stdwin)
+    (charms:cursor-position curses-window)
     (setf *last-cursor-x* x)
     (setf *last-cursor-y* y)))
 
@@ -66,7 +66,7 @@
              (setf (nth *x* (nth *y* *board*)) *current-player*)
              (setf *current-player* (change-player-turn *current-player*))
 
-             (save-cursor-pos)
+             (save-cursor-pos stdwin)
 
              ;; TODO: wrap in a function
              (charms:clear-window stdwin)

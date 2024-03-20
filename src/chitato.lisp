@@ -5,6 +5,7 @@
 (in-package :chitato)
 
 (require :cl-charms)
+(load "src/player.lisp")
 (load "src/board.lisp")
 
 (defparameter *current-player* :o)
@@ -51,6 +52,7 @@
              (setf *x* (1+ *x*))))
           ((#\space)
            (setf (nth *x* (nth *y* *board*)) *current-player*)
+           (setf *current-player* (change-player-turn *current-player*))
 
            ;; TODO: wrap in a function
            (charms:clear-window stdwin)

@@ -27,6 +27,7 @@
     (charms:move-cursor-up stdwin :amount (* (length *board*) 2))
     (charms:move-cursor-right stdwin :amount 2)
 
+    ;; TODO: wrap in a function
     (loop
       (let ((ch (charms:get-char stdwin
                        :ignore-error t)))
@@ -50,6 +51,8 @@
              (setf *x* (1+ *x*))))
           ((#\space)
            (setf (nth *x* (nth *y* *board*)) *current-player*)
+
+           ;; TODO: wrap in a function
            (charms:clear-window stdwin)
            (charms:move-cursor stdwin 0 0)
            (draw-board stdwin *board*)

@@ -34,7 +34,7 @@
 
 (defun draw-board (curses-window board)
   (dolist (row board)
-      (draw-board-line curses-window board)
-      (draw-board-middle curses-window row))
+    (draw-board-line curses-window board)
+    (draw-board-middle curses-window row))
 
   (draw-board-line curses-window board))

@@ -8,9 +8,6 @@
     (:x :e :e))
   "board :e for empty, :x, :o are players")
 
-(defun hello (to)
-  (format t "Hello, ~a!~%" to))
-
 (defun draw-board-line (curses-window board)
   (loop for _ from 1 to (length board) do
     (charms:write-string-at-cursor curses-window "+")

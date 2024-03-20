@@ -36,13 +36,6 @@
 
   (draw-board-line curses-window board))
 
-(defun check-if-player-wins (board)
-  (loop for y from 0 to (length board) do
-    (loop for x from 0 to (nth y board) do
-      (when (check-if-player-wins-horizontal board x y 3)
-        t)))
-  nil)
-
 ;; TODO: check for out-of-bound
 (defun check-if-player-wins-horizontal (board x y n)
   (assert (>= n 1))
@@ -55,3 +48,10 @@
   (if (not (eq (nth x (nth y board)) :e))
     (fn board x y n (nth x (nth y board)))
     nil))
+
+(defun check-if-player-wins (board)
+  (loop for y from 0 to (length board) do
+    (loop for x from 0 to (nth y board) do
+      (when (check-if-player-wins-horizontal board x y 3)
+        t)))
+  nil)

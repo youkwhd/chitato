@@ -8,7 +8,7 @@
 (load "src/player.lisp")
 (load "src/board.lisp")
 
-(defconstant +win-check-range+ 3)
+(defconstant +WIN-CHECK-RANGE+ 3)
 
 (defparameter *current-player* :o)
 (defparameter *x* 0)
@@ -76,7 +76,7 @@
 
              (draw-board-and-restore-cur-pos stdwin)
 
-             (when (check-if-player-wins *board* +win-check-range+)
+             (when (check-if-player-wins *board* +WIN-CHECK-RANGE+)
                (charms:finalize)
                (sb-ext:exit))
 

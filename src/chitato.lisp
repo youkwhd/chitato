@@ -23,21 +23,29 @@
     (setf *last-cursor-x* x)
     (setf *last-cursor-y* y)))
 
+;; TODO(refactor): These kind of function is so cursed
+(defun draw-board-and-adjust-cursor (curses-window)
+  (charms:clear-window curses-window)
+  (draw-board curses-window *board*)
+  (charms:refresh-window curses-window)
+
+  ;; should decrement move up but there's already newline
+  ;; printed from (draw-board), so no need.
+  (charms:move-cursor-up curses-window :amount (* (length *board*) 2))
+  (charms:move-cursor-right curses-window :amount 2))
+
+(defun draw-board-and-restore-cur-pos (curses-window)
+  (save-cursor-pos curses-window)
+  (draw-board-and-adjust-cursor curses-window)
+  (charms:move-cursor curses-window *last-cursor-x* *last-cursor-y*))
+
 (defun main ()
   (let ((stdwin (charms:initialize)))
     (charms:disable-echoing)
     (charms:enable-raw-input :interpret-control-characters t)
     (charms:enable-non-blocking-mode stdwin)
 
-    (charms:clear-window stdwin)
-    (charms:move-cursor stdwin 0 0)
-    (draw-board stdwin *board*)
-    (charms:refresh-window stdwin)
-
-    ;; should decrement move up but there's already newline
-    ;; printed from (draw-board), so no need.
-    (charms:move-cursor-up stdwin :amount (* (length *board*) 2))
-    (charms:move-cursor-right stdwin :amount 2)
+    (draw-board-and-adjust-cursor stdwin)
 
     ;; TODO: wrap in a function
     (loop
@@ -66,24 +74,18 @@
              (setf (nth *x* (nth *y* *board*)) *current-player*)
              (setf *current-player* (change-player-turn *current-player*))
 
-             (save-cursor-pos stdwin)
+             (draw-board-and-restore-cur-pos stdwin)
 
-             ;; TODO: wrap in a function
-             (charms:clear-window stdwin)
-             (charms:move-cursor stdwin 0 0)
-             (draw-board stdwin *board*)
-             (charms:refresh-window stdwin)
-
-             (charms:move-cursor-up stdwin :amount (* (length *board*) 2))
-             (charms:move-cursor-right stdwin :amount 2)
-
-             (charms:move-cursor stdwin *last-cursor-x* *last-cursor-y*)
-
-             (when (or
-                     (check-if-player-wins *board* +win-check-range+)
-                     (check-if-draw *board*))
+             (when (check-if-player-wins *board* +win-check-range+)
                (charms:finalize)
-               (sb-ext:exit))))
+               (sb-ext:exit))
+
+             (when (check-if-draw *board*)
+               (setf *board* (new-board *board*))
+               (draw-board-and-restore-cur-pos stdwin))))
+          ((#\r)
+           (setf *board* (new-board *board*))
+           (draw-board-and-restore-cur-pos stdwin))
           ((#\q)
            (charms:finalize)
            (sb-ext:exit)))))))

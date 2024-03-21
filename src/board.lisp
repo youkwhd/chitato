@@ -8,6 +8,14 @@
     (:e :e :e))
   "board :e for empty, :x, :o are players")
 
+(defun new-board (old-board)
+  (map 'list (lambda (board-row)
+               (map 'list (lambda (_)
+                            (declare (ignore _))
+                            :e)
+                    board-row))
+       old-board))
+
 (defun draw-board-line (curses-window board)
   (loop for _ from 1 to (length board) do
     (charms:write-string-at-cursor curses-window "+")

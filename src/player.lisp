@@ -6,3 +6,11 @@
      :o)
     ((:o)
      :x)))
+
+(defun player-char (p)
+  (case p
+    ((:x)
+     #\X)
+    ((:o)
+     #\O)
+    (t #\space)))

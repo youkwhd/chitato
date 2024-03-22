@@ -1,6 +1,7 @@
 (in-package :chitato)
 
 (require :cl-charms)
+(load "src/player.lisp")
 
 (defparameter *board*
   '((:e :e :e)
@@ -26,13 +27,7 @@
 (defun draw-board-middle (curses-window board-row)
   (loop for cell in board-row do
     (charms:write-string-at-cursor curses-window "| ")
-    (case cell 
-      ((:e)
-       (charms:write-char-at-cursor curses-window #\space))
-      ((:x)
-       (charms:write-char-at-cursor curses-window #\X))
-      ((:o)
-       (charms:write-char-at-cursor curses-window #\O)))
+    (charms:write-char-at-cursor curses-window (player-char cell))
     (charms:write-char-at-cursor curses-window #\space))
   (charms:write-string-at-cursor curses-window "|")
   (charms:write-char-at-cursor curses-window #\newline))

@@ -14,6 +14,8 @@
 (defparameter *x* 0)
 (defparameter *y* 0)
 
+(defparameter *is-board-locked* nil)
+
 (defparameter *last-cursor-x* 0)
 (defparameter *last-cursor-y* 0)
 
@@ -22,6 +24,9 @@
     (charms:cursor-position curses-window)
     (setf *last-cursor-x* x)
     (setf *last-cursor-y* y)))
+
+(defun restore-cursor-pos (curses-window)
+  (charms:move-cursor curses-window *last-cursor-x* *last-cursor-y*))
 
 ;; TODO(refactor): These kind of function is so cursed
 (defun draw-board-and-adjust-cursor (curses-window)
@@ -37,7 +42,7 @@
 (defun draw-board-and-restore-cur-pos (curses-window)
   (save-cursor-pos curses-window)
   (draw-board-and-adjust-cursor curses-window)
-  (charms:move-cursor curses-window *last-cursor-x* *last-cursor-y*))
+  (restore-cursor-pos curses-window))
 
 (defun main ()
   (let ((stdwin (charms:initialize)))
@@ -70,21 +75,28 @@
              (charms:move-cursor-right stdwin :amount 4)
              (setf *x* (1+ *x*))))
           ((#\space)
-           (when (equal (nth *x* (nth *y* *board*)) :e)
+           (when (and
+                   (not *is-board-locked*)
+                   (equal (nth *x* (nth *y* *board*)) :e))
              (setf (nth *x* (nth *y* *board*)) *current-player*)
-             (setf *current-player* (change-player-turn *current-player*))
 
              (draw-board-and-restore-cur-pos stdwin)
 
-             (when (check-if-player-wins *board* +WIN-CHECK-RANGE+)
-               (charms:finalize)
-               (sb-ext:exit))
+             (cond
+               ((check-if-player-wins *board* +WIN-CHECK-RANGE+)
+                (charms:write-string-at-point stdwin (format nil "Player ~a wins (PRESS R TO RESTART)" (player-char *current-player*)) 0 (1+ (* (length *board*) 2)))
+                (restore-cursor-pos stdwin)
+                (setf *is-board-locked* t))
 
-             (when (check-if-draw *board*)
-               (setf *board* (new-board *board*))
-               (draw-board-and-restore-cur-pos stdwin))))
+               ((check-if-draw *board*)
+                (charms:write-string-at-point stdwin "Draw (PRESS R TO RESTART)" 0 (1+ (* (length *board*) 2)))
+                (restore-cursor-pos stdwin)
+                (setf *is-board-locked* t)))
+
+             (setf *current-player* (change-player-turn *current-player*))))
           ((#\r)
            (setf *board* (new-board *board*))
+           (setf *is-board-locked* nil)
            (draw-board-and-restore-cur-pos stdwin))
           ((#\q)
            (charms:finalize)

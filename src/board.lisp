@@ -18,7 +18,7 @@
        old-board))
 
 (defun draw-board-line (curses-window board)
-  (loop for _ from 1 to (length board) do
+  (loop for _ from 1 to (length (first board)) do
     (charms:write-string-at-cursor curses-window "+")
     (charms:write-string-at-cursor curses-window "---"))
   (charms:write-string-at-cursor curses-window "+")

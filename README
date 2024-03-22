@@ -1,7 +1,7 @@
 chitato
 =======
 
-Customizable game of "Tic-tac-toe"
+Game of "Tic-tac-toe" written in Common Lisp
 
 Dependencies
 ------------

@@ -122,6 +122,12 @@
         (return-from check-if-player-wins t))))
   nil)
 
+(defun board-ui-width (board)
+  (1+ (* (length (first board)) 4)))
+
+(defun board-ui-height (board)
+  (1+ (* (length board) 2)))
+
 (defun check-if-draw (board)
   (every (lambda (res) (eq res t))
          (map 'list (lambda (board-row)

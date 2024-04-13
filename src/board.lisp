@@ -1,8 +1,5 @@
 (in-package :chitato)
 
-(require :cl-charms)
-(load "src/player.lisp")
-
 (defparameter *board*
   '((:e :e :e)
     (:e :e :e)
@@ -16,28 +13,6 @@
                             :e)
                     board-row))
        old-board))
-
-(defun draw-board-line (curses-window board)
-  (loop for _ from 1 to (length (first board)) do
-    (charms:write-string-at-cursor curses-window "+")
-    (charms:write-string-at-cursor curses-window "---"))
-  (charms:write-string-at-cursor curses-window "+")
-  (charms:write-char-at-cursor curses-window #\newline))
-
-(defun draw-board-middle (curses-window board-row)
-  (loop for cell in board-row do
-    (charms:write-string-at-cursor curses-window "| ")
-    (charms:write-char-at-cursor curses-window (player-char cell))
-    (charms:write-char-at-cursor curses-window #\space))
-  (charms:write-string-at-cursor curses-window "|")
-  (charms:write-char-at-cursor curses-window #\newline))
-
-(defun draw-board (curses-window board)
-  (dolist (row board)
-    (draw-board-line curses-window board)
-    (draw-board-middle curses-window row))
-
-  (draw-board-line curses-window board))
 
 (defun check-if-player-wins-horizontal (board x y n)
   (assert (>= n 1))
@@ -121,12 +96,6 @@
               (check-if-player-wins-left-diagonal board x y range))
         (return-from check-if-player-wins t))))
   nil)
-
-(defun board-ui-width (board)
-  (1+ (* (length (first board)) 4)))
-
-(defun board-ui-height (board)
-  (1+ (* (length board) 2)))
 
 (defun check-if-draw (board)
   (every (lambda (res) (eq res t))

@@ -7,6 +7,7 @@
 (require :cl-charms)
 (load "src/player.lisp")
 (load "src/board.lisp")
+(load "src/ui/curses/board.lisp")
 
 (defconstant +WIN-CHECK-RANGE+ 3)
 
@@ -31,7 +32,7 @@
 ;; TODO(refactor): These kind of function is so cursed
 (defun draw-board-and-adjust-cursor (curses-window)
   (charms:clear-window curses-window)
-  (draw-board curses-window *board*)
+  (draw-board-ui curses-window *board*)
   (charms:refresh-window curses-window)
 
   ;; should decrement move up but there's already newline
